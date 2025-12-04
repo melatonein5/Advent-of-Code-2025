@@ -6,65 +6,43 @@ import (
 	"os"
 )
 
-// Right turns adds to the current direction
+// turnRight rotates the dial to the right by the specified amount
 func turnRight(current, amount int) int {
-	//Firstly, perform the addition
-	newValue := current + amount
-
-	//Next, as the number needs to be in the range of 0 to 99, we can use modulo
-	newValue = newValue % 100
-	return newValue
+	return (current + amount) % 100
 }
 
-// Left turns subtracts from the current direction
+// turnLeft rotates the dial to the left by the specified amount
 func turnLeft(current, amount int) int {
-	//Firstly, perform the subtraction
-	newValue := current - amount
-
-	//For modulo with negative numbers on a circular dial, use this formula
-	newValue = ((newValue % 100) + 100) % 100
-	return newValue
+	return ((current-amount)%100 + 100) % 100
 }
 
-// ReadInput reads the input file and returns a cuple, one boolean indicating the turn direction (true for right, false for left) and an integer indicating the amount to turn
-func ReadInput(filename string) ([]struct {
+// readInput parses the input file and returns a slice of rotations
+func readInput(filename string) ([]struct {
 	Direction bool
 	Amount    int
 }, error) {
-	//Open the file
 	f, err := os.Open(filename)
 	if err != nil {
 		return nil, err
 	}
 	defer f.Close()
 
-	//Create a scanner
 	scanner := bufio.NewScanner(f)
-
-	//Each line will start with L or R, followed by a number
 	var rotations []struct {
 		Direction bool
 		Amount    int
 	}
 
-	//Read each line
 	for scanner.Scan() {
 		line := scanner.Text()
-		var direction bool
-		if line[0] == 'R' {
-			direction = true
-		} else {
-			direction = false
-		}
-
-		amount := line[1:] //Get the substring after the first character
-		var amountInt int
-		fmt.Sscanf(amount, "%d", &amountInt)
+		direction := line[0] == 'R'
+		var amount int
+		fmt.Sscanf(line[1:], "%d", &amount)
 
 		rotations = append(rotations, struct {
 			Direction bool
 			Amount    int
-		}{Direction: direction, Amount: amountInt})
+		}{Direction: direction, Amount: amount})
 	}
 
 	return rotations, nil
@@ -125,22 +103,16 @@ func part1(input []struct {
 	Direction bool
 	Amount    int
 }) int {
-	//Create a counter for the number of times we land on 0
 	zeroCount := 0
-	//The dial starts at 50
 	currentPosition := 50
 
-	//Process each rotation
 	for _, rotation := range input {
 		if rotation.Direction {
-			//Right turn
 			currentPosition = turnRight(currentPosition, rotation.Amount)
 		} else {
-			//Left turn
 			currentPosition = turnLeft(currentPosition, rotation.Amount)
 		}
 
-		//Check if we are at 0
 		if currentPosition == 0 {
 			zeroCount++
 		}
@@ -189,34 +161,24 @@ func part2(input []struct {
 
 	for _, rotation := range input {
 		if rotation.Direction {
-			// Right turn
-			// How many clicks until we hit 0?
-			// From position p, going right, we hit 0 at position (100-p) % 100
-			// But if we're at 0, we hit it again at 100 clicks (wraps to 0)
+			// Right turn: count times we pass through 0
 			if currentPosition == 0 {
-				// Already at 0, count how many times we pass it
-				// We pass 0 at click 100, 200, etc.
 				zeroCount += rotation.Amount / 100
 			} else {
 				distanceToZero := 100 - currentPosition
 				if rotation.Amount >= distanceToZero {
-					// We will pass through 0
-					// First time: at distanceToZero clicks
-					// Subsequent times: every 100 clicks after that
-					zeroCount += 1 + (rotation.Amount - distanceToZero) / 100
+					zeroCount += 1 + (rotation.Amount-distanceToZero)/100
 				}
 			}
 			currentPosition = turnRight(currentPosition, rotation.Amount)
 		} else {
-			// Left turn
+			// Left turn: count times we pass through 0
 			if currentPosition == 0 {
-				// Already at 0, count how many times we pass it
 				zeroCount += rotation.Amount / 100
 			} else {
 				distanceToZero := currentPosition
 				if rotation.Amount >= distanceToZero {
-					// We will pass through 0
-					zeroCount += 1 + (rotation.Amount - distanceToZero) / 100
+					zeroCount += 1 + (rotation.Amount-distanceToZero)/100
 				}
 			}
 			currentPosition = turnLeft(currentPosition, rotation.Amount)
@@ -227,16 +189,16 @@ func part2(input []struct {
 }
 
 func main() {
-	//Read the input
-	input, err := ReadInput("input.csv")
+	input, err := readInput("input.csv")
 	if err != nil {
 		fmt.Println("Error reading input:", err)
 		return
 	}
 
-	//Solve part 1
-	fmt.Println(part1(input))
+	part1Result := part1(input)
+	part2Result := part2(input)
 
-	//Solve part 2
-	fmt.Println(part2(input))
+	fmt.Println("=== Day 1: Secret Entrance ===")
+	fmt.Printf("Part 1: %d\n", part1Result)
+	fmt.Printf("Part 2: %d\n", part2Result)
 }
