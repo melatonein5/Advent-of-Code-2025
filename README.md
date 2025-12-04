@@ -3,7 +3,9 @@
 
 Advent of Code is an Advent calendar of small programming puzzles for a variety of skill levels that can be solved in any programming language you like. People use them as interview prep, company training, university coursework, practice problems, a speed contest, or to challenge each other.
 
-> Any text that appears like the following was written by me, while the rest is copied and pasted from the puzzle. Any code that appears was written by me, unless stated otherwise (often in sections labelled "Other Oddities"). Note that this only applies to this file. Any other files are authored by myself.
+> Any text that appears like the following was written by me, while the rest is copied and pasted from the puzzle. Any code that appears was written by me, unless stated otherwise. Note that this only applies to this file. Any other files are authored by myself.
+
+> Sections labelled "Other Oddities" is my original work.
 
 > All code is written in Go, as that is my language of preference due to its strong standard library (although much of it will go unused due to how low-level the puzzles are).
 
