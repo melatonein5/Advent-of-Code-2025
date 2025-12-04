@@ -12,6 +12,8 @@ Advent of Code is an Advent calendar of small programming puzzles for a variety 
 ## Day 1: Secret Entrance
 > There are two parts to this problem.
 
+"Due to new security protocols, the password is locked in the safe below. Please see the attached document for the new combination."
+
 This problem involves a safe with a dial. The safe has a dial with only an arrow on it; around the dial are the numbers 0 through 99 in order. As you turn the dial, it makes a small click noise as it reaches each number.
 
 The puzzle input contains a sequence of rotations, one per line, which tell you how to open the safe. A rotation starts with an L or R which indicates whether the rotation should be to the left (toward lower numbers) or to the right (toward higher numbers). Then, the rotation has a distance value which indicates how many clicks the dial should be rotated in that direction.
@@ -32,7 +34,7 @@ The dial starts by pointing at 50.
 > My first attempt resulted in a time complexity of O(3n). This is broken down into: reading the file into a data structure in memory; solving the part 1; solving part 2. This is because I was reading the input into a data structure, and then performing my algorithms separately. I then condensed this down into O(2n) complexity by combining the two algorithms to evaluate alongside each other. This was then further condensed into a total time complexity of O(n) by evaluating a rotation when it is read from the input file.
 
 ### Part 1: Counting how many times the an input results in the dial pointing at 0
-For this puzzle, the solution is how many times the arrow on the dial points to 0.
+You could follow the instructions, but your recent required official North Pole secret entrance security training seminar taught you that the safe is actually a decoy. The actual password is the number of times the dial is left pointing at 0 after any rotation in the sequence.
 
 For example, suppose the input contained the following rotations:
 ```
