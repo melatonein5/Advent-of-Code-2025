@@ -128,7 +128,7 @@ func solveN(filename string) (int, int, error) {
 | Metric | O(2n) Solution | O(n) Solution |
 |--------|---|---|
 | Time | 2 × iterations | 1 × iterations |
-| Space | 4498 structs stored (~≈256KB) | 3 integers stored (~≈12 bytes) |
+| Space | 4498 structs stored (~≈105KB) | 4 integers & 1 boolean stored (~≈17 bytes) |
 | Read/Parse | All data read upfront | Streaming |
 | Computing | After all data loaded | During read |
 
@@ -139,4 +139,4 @@ Both solutions produce identical results:
 - **Part 1:** 1129
 - **Part 2:** 6638
 
-The O(n) solution achieves 50% time improvement with virtually no memory overhead.
+The O(n) solution achieves 50% time improvement with virtually no memory overhead (0.01% of the memory used in comparison to the O(2n) solution).

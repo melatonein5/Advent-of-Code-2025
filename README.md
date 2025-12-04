@@ -3,7 +3,7 @@
 
 Advent of Code is an Advent calendar of small programming puzzles for a variety of skill levels that can be solved in any programming language you like. People use them as interview prep, company training, university coursework, practice problems, a speed contest, or to challenge each other.
 
-> Any text that appears like the following was written by me, while the rest is copied and pasted from the puzzle. Any code that appears was written by me, unless stated otherwise. Note that this only applies to this file. Any other files are authored by myself.
+> Any text that appears like the following was written by me, while the rest is copied and pasted from the puzzle. Any code that appears was written by me, unless stated otherwise (often in sections labelled "Other Oddities"). Note that this only applies to this file. Any other files are authored by myself.
 
 > All code is written in Go, as that is my language of preference due to its strong standard library (although much of it will go unused due to how low-level the puzzles are).
 
@@ -65,7 +65,7 @@ The dial is rotated L82 to point at 32.
 
 Because the dial points at 0 a total of three times during this process, the solution in this example is 3.
 
->For my solution, I wrote two functions. One to evaluate a left turn and another to evaluate a right turn:
+>The first thing I noticed is that there are some big numbers in the input. Input 128 is a right turn by 958. For my solution, I wrote two functions. One to evaluate a left turn and another to evaluate a right turn:
 ```go
 // turnRight rotates the dial to the right by the specified amount
 func turnRight(current, amount int) int {
@@ -172,3 +172,72 @@ if rotation.Direction {
 > If the current position is already at 0, then I calculate how many complete rotations of 100 occur during this turn using integer division (`rotation.Amount / 100`). If the current position is not 0, I calculate the distance to 0. For a right turn, this is `100 - currentPosition`. For a left turn, this is simply `currentPosition`. If the rotation amount is at least this distance, then we will pass through 0 at least once. The total count is `1` (for the first pass) plus any additional complete rotations: `(rotation.Amount - distanceToZero) / 100`.
 
 > Once all the inputs have been evaluated, I simply print the value of `part2Count`, which is 6638 for the inputs I was provided.
+
+#### Other Oddities
+This section is my own work. There are two other things worth mentioning:
+- How I read the input.
+- How I parse the input.
+
+I simply copied and pasted my input file into a comma separated values (`.csv`) file, and use the Go standard library to real the file line-by-line. Each rotation is stored on it's own line.
+```go
+// readInput parses the input file and returns a slice of rotations
+func readInput(filename string) ([]struct {
+	Direction bool
+	Amount    int
+}, error) {
+	f, err := os.Open(filename)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+
+	scanner := bufio.NewScanner(f)
+	var rotations []struct {
+		Direction bool
+		Amount    int
+	}
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		direction := line[0] == 'R'
+		var amount int
+		fmt.Sscanf(line[1:], "%d", &amount)
+
+		rotations = append(rotations, struct {
+			Direction bool
+			Amount    int
+		}{Direction: direction, Amount: amount})
+	}
+
+	return rotations, nil
+}
+```
+
+The first character will always be the direction of the rotation (`R` or `L`). I am storing this as a boolean, with `R` being represented by `true` and `L`  being representing by `false` (in fact, anything that isn't an `R` is represented by `false`, which leads to behaviour where `☭345` is a left turn by 345, and I supposed it is appropriate that a hammer and sickle glyph results in a rotation to the left).
+
+A boolean takes up a single byte of memory. This is as memory efficient as storing `R` or `L`, which also can be represent as a single byte, being represented by `0x52` and `0x4C` respectively. Using a boolean means I can have more elegant code for statements logical comparators. See below for an example:
+```go
+// Storing R and L as bytes (BAD!!!)
+if rotation.Direction == 'R' {
+    currentPosition = turnRight(currentPosition, rotation.Amount)   
+} else if rotation.Direction == 'L' {
+    currentPosition = turnLeft(currentPosition, rotation.Amount)
+}
+
+// Storing R and L as a boolean (GOOD)
+if rotation.Direction {
+    currentPosition = turnRight(currentPosition, rotation.Amount)   
+} else {
+    currentPosition = turnLeft(currentPosition, rotation.Amount)
+}
+```
+The boolean approach is cleaner, more readable, and easier to reason about. Additionally, when calculating the distance to 0 during Part 2, I can use the boolean directly in a logical expression:
+```go
+distanceToZero := 100 - currentPosition
+if !rotation.Direction {
+    distanceToZero = currentPosition
+}
+```
+This is far more elegant than comparing characters or using switch statements.
+
+For how much you actually turn the dial, we know that the first character of each line can be ignored. We can just chop it off and store the number with `fmt.Sscanf(line[1:], "%d", &amount)`. Easy. 
