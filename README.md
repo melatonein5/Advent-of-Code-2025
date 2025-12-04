@@ -215,7 +215,7 @@ func readInput(filename string) ([]struct {
 
 The first character will always be the direction of the rotation (`R` or `L`). I am storing this as a boolean, with `R` being represented by `true` and `L`  being representing by `false` (in fact, anything that isn't an `R` is represented by `false`, which leads to behaviour where `☭345` is a left turn by 345, and I supposed it is appropriate that a hammer and sickle glyph results in a rotation to the left).
 
-A boolean takes up a single byte of memory. This is as memory efficient as storing `R` or `L`, which also can be represent as a single byte, being represented by `0x52` and `0x4C` respectively. Using a boolean means I can have more elegant code for statements logical comparators. See below for an example:
+A boolean takes up a single byte of memory. This is as memory efficient as storing `R` or `L`, which also can be represented as a single byte, being represented by `0x52` and `0x4C` respectively. Using a boolean means I can have more elegant code for statements logical comparators. See below for an example:
 ```go
 // Storing R and L as bytes (BAD!!!)
 if rotation.Direction == 'R' {
