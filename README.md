@@ -25,7 +25,7 @@ So, if the dial were pointing at 5, a rotation of L10 would cause it to point at
 The dial starts by pointing at 50.
 
 > **Time Complexity** : O(n) & O(2n)
-**Space Complexity**: O(1) & O(n) 
+> **Space Complexity**: O(1) & O(n) 
 
 > Space complexity of the completed puzzle is always technically going to be O(n), the input still needs to be stored on disk, which counts as auxiliary space, contributing to the space complexity. It will naturally grow in a linear fashion. While my code has been modified to read from disk as a data stream and evaluates the rotation as it is being read there and then, 
 
