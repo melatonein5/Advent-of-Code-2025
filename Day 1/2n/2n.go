@@ -178,7 +178,7 @@ func main() {
 
 	part1Result, part2Result := solve(input)
 
-	fmt.Println("=== Day 1: Secret Entrance ===")
+	fmt.Println("=== Day 1: Secret Entrance (RunAlt) ===")
 	fmt.Printf("Part 1: %d\n", part1Result)
 	fmt.Printf("Part 2: %d\n", part2Result)
 }
