@@ -46,7 +46,8 @@ func ReadInput(filename string) ([]struct {
 		Direction bool
 		Amount    int
 	}
-	main
+
+	//Read each line
 	for scanner.Scan() {
 		line := scanner.Text()
 		var direction bool
@@ -148,6 +149,83 @@ func part1(input []struct {
 	return zeroCount
 }
 
+/*
+--- Part Two ---
+
+You're sure that's the right password, but the door won't open. You knock, but nobody answers. You build a snowman while you think.
+
+As you're rolling the snowballs for your snowman, you find another security document that must have fallen into the snow:
+
+"Due to newer security protocols, please use password method 0x434C49434B until further notice."
+
+You remember from the training seminar that "method 0x434C49434B" means you're actually supposed to count the number of times any click causes the dial to point at 0, regardless of whether it happens during a rotation or at the end of one.
+
+Following the same rotations as in the above example, the dial points at zero a few extra times during its rotations:
+
+	The dial starts by pointing at 50.
+	The dial is rotated L68 to point at 82; during this rotation, it points at 0 once.
+	The dial is rotated L30 to point at 52.
+	The dial is rotated R48 to point at 0.
+	The dial is rotated L5 to point at 95.
+	The dial is rotated R60 to point at 55; during this rotation, it points at 0 once.
+	The dial is rotated L55 to point at 0.
+	The dial is rotated L1 to point at 99.
+	The dial is rotated L99 to point at 0.
+	The dial is rotated R14 to point at 14.
+	The dial is rotated L82 to point at 32; during this rotation, it points at 0 once.
+
+In this example, the dial points at 0 three times at the end of a rotation, plus three more times during a rotation. So, in this example, the new password would be 6.
+
+Be careful: if the dial were pointing at 50, a single rotation like R1000 would cause the dial to point at 0 ten times before returning back to 50!
+
+Using password method 0x434C49434B, what is the password to open the door?
+*/
+func part2(input []struct {
+	Direction bool
+	Amount    int
+}) int {
+	zeroCount := 0
+	currentPosition := 50
+
+	for _, rotation := range input {
+		if rotation.Direction {
+			// Right turn
+			// How many clicks until we hit 0?
+			// From position p, going right, we hit 0 at position (100-p) % 100
+			// But if we're at 0, we hit it again at 100 clicks (wraps to 0)
+			if currentPosition == 0 {
+				// Already at 0, count how many times we pass it
+				// We pass 0 at click 100, 200, etc.
+				zeroCount += rotation.Amount / 100
+			} else {
+				distanceToZero := 100 - currentPosition
+				if rotation.Amount >= distanceToZero {
+					// We will pass through 0
+					// First time: at distanceToZero clicks
+					// Subsequent times: every 100 clicks after that
+					zeroCount += 1 + (rotation.Amount - distanceToZero) / 100
+				}
+			}
+			currentPosition = turnRight(currentPosition, rotation.Amount)
+		} else {
+			// Left turn
+			if currentPosition == 0 {
+				// Already at 0, count how many times we pass it
+				zeroCount += rotation.Amount / 100
+			} else {
+				distanceToZero := currentPosition
+				if rotation.Amount >= distanceToZero {
+					// We will pass through 0
+					zeroCount += 1 + (rotation.Amount - distanceToZero) / 100
+				}
+			}
+			currentPosition = turnLeft(currentPosition, rotation.Amount)
+		}
+	}
+
+	return zeroCount
+}
+
 func main() {
 	//Read the input
 	input, err := ReadInput("input.csv")
@@ -158,6 +236,7 @@ func main() {
 
 	//Solve part 1
 	fmt.Println(part1(input))
-	//Output the result
-	fmt.Println("The password to open the door is:", zeroCount)
+
+	//Solve part 2
+	fmt.Println(part2(input))
 }
