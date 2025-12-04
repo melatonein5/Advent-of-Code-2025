@@ -122,7 +122,9 @@ func turnLeftString(current, amount int) int {
 > Once all the inputs have been evaluated, I simply print the value of `part1Count`, which is 1129 for the inputs I was provided.
 
 ### Part 2: Counting how many times the dial has a value of 0
-I now have to count the number of times any click causes the dial to point at 0, regardless of whether it happens during a rotation or at the end of one.
+"Due to newer security protocols, please use password method 0x434C49434B until further notice."
+
+You remember from the training seminar that "method 0x434C49434B" means you're actually supposed to count the number of times any click causes the dial to point at 0, regardless of whether it happens during a rotation or at the end of one.
 
 Following the same rotations as in the above example, the dial points at zero a few extra times during its rotations:
 ```
