@@ -99,26 +99,42 @@ Because the dial points at 0 a total of three times during this process, the pas
 
 Analyze the rotations in your attached document. What's the actual password to open the door?
 */
-func part1(input []struct {
+func solve(input []struct {
 	Direction bool
 	Amount    int
-}) int {
-	zeroCount := 0
+}) (int, int) {
+	part1Count := 0
+	part2Count := 0
 	currentPosition := 50
 
 	for _, rotation := range input {
+		// Calculate part 2: count passes through 0 during rotation
+		if currentPosition == 0 {
+			part2Count += rotation.Amount / 100
+		} else {
+			distanceToZero := 100 - currentPosition
+			if !rotation.Direction {
+				distanceToZero = currentPosition
+			}
+			if rotation.Amount >= distanceToZero {
+				part2Count += 1 + (rotation.Amount-distanceToZero)/100
+			}
+		}
+
+		// Update position
 		if rotation.Direction {
 			currentPosition = turnRight(currentPosition, rotation.Amount)
 		} else {
 			currentPosition = turnLeft(currentPosition, rotation.Amount)
 		}
 
+		// Calculate part 1: count landings on 0
 		if currentPosition == 0 {
-			zeroCount++
+			part1Count++
 		}
 	}
 
-	return zeroCount
+	return part1Count, part2Count
 }
 
 /*
@@ -152,41 +168,6 @@ Be careful: if the dial were pointing at 50, a single rotation like R1000 would 
 
 Using password method 0x434C49434B, what is the password to open the door?
 */
-func part2(input []struct {
-	Direction bool
-	Amount    int
-}) int {
-	zeroCount := 0
-	currentPosition := 50
-
-	for _, rotation := range input {
-		if rotation.Direction {
-			// Right turn: count times we pass through 0
-			if currentPosition == 0 {
-				zeroCount += rotation.Amount / 100
-			} else {
-				distanceToZero := 100 - currentPosition
-				if rotation.Amount >= distanceToZero {
-					zeroCount += 1 + (rotation.Amount-distanceToZero)/100
-				}
-			}
-			currentPosition = turnRight(currentPosition, rotation.Amount)
-		} else {
-			// Left turn: count times we pass through 0
-			if currentPosition == 0 {
-				zeroCount += rotation.Amount / 100
-			} else {
-				distanceToZero := currentPosition
-				if rotation.Amount >= distanceToZero {
-					zeroCount += 1 + (rotation.Amount-distanceToZero)/100
-				}
-			}
-			currentPosition = turnLeft(currentPosition, rotation.Amount)
-		}
-	}
-
-	return zeroCount
-}
 
 func main() {
 	input, err := readInput("input.csv")
@@ -195,8 +176,7 @@ func main() {
 		return
 	}
 
-	part1Result := part1(input)
-	part2Result := part2(input)
+	part1Result, part2Result := solve(input)
 
 	fmt.Println("=== Day 1: Secret Entrance ===")
 	fmt.Printf("Part 1: %d\n", part1Result)
