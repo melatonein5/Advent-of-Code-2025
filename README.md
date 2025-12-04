@@ -178,7 +178,7 @@ This section is my own work. There are two other things worth mentioning:
 - How I read the input.
 - How I parse the input.
 
-I simply copied and pasted my input file into a comma separated values (`.csv`) file, and use the Go standard library to real the file line-by-line. Each rotation is stored on it's own line.
+I simply copied and pasted my input file into a comma separated values (`.csv`) file, and used the Go standard library to real the file line-by-line. Each rotation is stored on it's own line.
 ```go
 // readInput parses the input file and returns a slice of rotations
 func readInput(filename string) ([]struct {
