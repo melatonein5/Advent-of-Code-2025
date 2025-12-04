@@ -136,7 +136,7 @@ The dial is rotated L99 to point at 0.
 The dial is rotated R14 to point at 14.
 The dial is rotated L82 to point at 32; during this rotation, it points at 0 once.
 ```
-In this example, the dial points at 0 three times at the end of a rotation, plus three more times during a rotation. So, in this example, the new password would be 6.
+In this example, the dial points at 0 three times at the end of a rotation, plus three more times during a rotation. So, in this example, the new solution would be 6.
 
 If the dial were pointing at 50, a single rotation like R1000 would cause the dial to point at 0 ten times before returning back to 50!
 
