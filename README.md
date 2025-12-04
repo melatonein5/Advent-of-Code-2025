@@ -82,7 +82,7 @@ func turnLeft(current, amount int) int {
 In computing and mathematics, the modulo operation returns the remainder or signed remainder of a division, after one number is divided by another, the latter being called the modulus of the operation (Wikipedia).
 > This is performed because the dial is circular. If the number is bigger than 99, it needs to normalised to a number between 0 & 99. In decimal systems, you would simply just look at the last two digits. As the data is stored in binary, a mathematical operation is required. I could probably convert to a string and get the last two characters at the cost of memory usage, but it doesn't look as elegant. I also haven't benchmarked the two approaches. While division and multiplication operations are often computationally expensive, I imagine the amount of conversion going on would benefit performance, and may actually hinder it. For context, this is what that would look like:
 ```go
-// String Manipulation (Not Recommended - For Reference Only)
+// String Manipulation
 func turnRightString(current, amount int) int {
     sum := current + amount
     // Convert to string, get last 2 digits, convert back to int
