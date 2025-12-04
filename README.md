@@ -27,7 +27,7 @@ The dial starts by pointing at 50.
 > **Time Complexity** : O(n) & O(2n)
 > **Space Complexity**: O(1) & O(n) 
 
-> Space complexity of the completed puzzle is always technically going to be O(n), the input still needs to be stored on disk, which counts as auxiliary space, contributing to the space complexity. It will naturally grow in a linear fashion. While my code has been modified to read from disk as a data stream and evaluates the rotation as it is being read there and then, 
+> Space complexity of the completed puzzle is always technically going to be O(n), the input still needs to be stored on disk, which counts as auxiliary space, contributing to the space complexity. It will naturally grow in a linear fashion. While my code has been modified to read from disk as a data stream and evaluates the rotation as it is being read there and then, I originally stored this in memory. Using a file stream is much more efficient. This can be seen in [this file](Day%201/COMPLEXITY_ANALYSIS.md).
 
 > My first attempt resulted in a time complexity of O(3n). This is broken down into: reading the file into a data structure in memory; solving the part 1; solving part 2. This is because I was reading the input into a data structure, and then performing my algorithms separately. I then condensed this down into O(2n) complexity by combining the two algorithms to evaluate alongside each other. This was then further condensed into a total time complexity of O(n) by evaluating a rotation when it is read from the input file.
 
